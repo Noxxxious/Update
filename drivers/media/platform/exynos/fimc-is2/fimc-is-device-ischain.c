@@ -61,7 +61,6 @@
 #include "fimc-is-clk-gate.h"
 #include "fimc-is-dvfs.h"
 #include "fimc-is-device-preprocessor.h"
-#include "fimc-is-interface-fd.h"
 #include "fimc-is-vender-specific.h"
 #include "exynos-fimc-is-module.h"
 
@@ -2212,7 +2211,7 @@ int fimc_is_ischain_runtime_suspend(struct device *dev)
 #if !defined(ENABLE_IS_CORE)
 	fimc_is_hardware_runtime_suspend(&core->hardware);
 #endif
-#ifdef USE_CAMERA_HW_BIG_DATA
+#ifdef CAMERA_HW_BIG_DATA_FILE_IO
 	if (fimc_is_sec_need_update_to_file())
 		fimc_is_sec_copy_err_cnt_to_file();
 #endif

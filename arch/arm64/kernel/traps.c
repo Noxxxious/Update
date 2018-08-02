@@ -488,7 +488,7 @@ asmlinkage void __exception do_undefinstr(struct pt_regs *regs, unsigned int esr
 
 #ifdef CONFIG_SEC_DEBUG_EXTRA_INFO
 	if (!user_mode(regs))
-		sec_debug_set_extra_info_fault(-1, regs);
+		sec_debug_set_extra_info_fault(UNDEF_FAULT, (unsigned long)pc, regs);
 #endif
 	arm64_notify_die("Oops - undefined instruction", regs, &info, esr);
 }
@@ -609,7 +609,7 @@ asmlinkage void bad_mode(struct pt_regs *regs, int reason, unsigned int esr)
 
 #ifdef CONFIG_SEC_DEBUG_EXTRA_INFO
 	if (!user_mode(regs)) {
-		sec_debug_set_extra_info_fault(SEC_DEBUG_BADMODE_MAGIC, regs);
+		sec_debug_set_extra_info_fault(BAD_MODE_FAULT, (unsigned long)regs->pc, regs);
 		sec_debug_set_extra_info_esr(esr);
 	}
 #endif
