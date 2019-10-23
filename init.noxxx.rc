@@ -1,0 +1,30 @@
+on late-fs
+    write /sys/block/sda/queue/iostats 0
+    write /sys/block/sda/queue/scheduler cfq
+    write /sys/block/sda/queue/iosched/slice_idle 0
+    write /sys/block/sda/queue/read_ahead_kb 2048
+    write /sys/block/sda/queue/nr_requests 256
+
+on boot
+    chown system system /sys/fs/selinux/enforce
+    chmod 644 /sys/fs/selinux/enforce
+    write /sys/fs/selinux/enforce 0
+
+    write /sys/block/zram0/disksize 2684354560
+    exec u:r:init:s0 -- /system/bin/mkswap /dev/block/zram0
+    exec u:r:init:s0 -- /system/bin/swapon /dev/block/zram0
+
+on property:sys.boot_completed=1
+    stop secure_storage
+
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 2314000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1690000
+    write /sys/kernel/gpu/gpu_max_clock 546000
+    write /sys/block/sda/queue/rotational 0
+    write /sys/block/sda/queue/read_ahead_kb 128
+    write /sys/block/sda/queue/nr_requests 128
+    write /dev/cpuset/abnormal/cpus 0-1
+    write /dev/cpuset/restricted/cpus 0-2
+    write /proc/sys/vm/swappiness 80
+
+    exec u:r:init:s0 -- /noxxx.sh
