@@ -26,6 +26,12 @@ on init
 
     symlink /data/app /factory
 
+    #Reactivation Lock
+    symlink /dev/block/platform/11120000.ufs/by-name/STEADY /dev/block/steady
+
+    #Google FRP solution
+    symlink /dev/block/platform/11120000.ufs/by-name/PERSISTENT /dev/block/persistent
+
 on post-fs
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
@@ -144,13 +150,6 @@ on post-fs-data
     chmod 0664 /efs/wifi/.mac.info
     chown wifi root /efs/wifi/.mac.cob
     chmod 0664 /efs/wifi/.mac.cob
-
-# Private Mode
-    mkdir /mnt/shell/privatemode 0700 system system
-    mkdir /storage/Private 0000 system system
-    mkdir /data/privatemode 0770 system system
-    chown system system /data/privatemode
-    restorecon /data/privatemode
 
 on boot
 # SSWAP
@@ -1008,9 +1007,9 @@ on property:security.semdaemonfinish=1
     stop sem_daemon
 
 # SSWAP
-#service swapon /sbin/sswap -s -f 2048
-#    class core
-#    user root
-#    group root
-#    seclabel u:r:sswap:s0
-#    oneshot
+service swapon /sbin/sswap -s -f 2048
+    class core
+    user root
+    group root
+    seclabel u:r:sswap:s0
+    oneshot
